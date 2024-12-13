@@ -1,50 +1,192 @@
 # OdoWatch
 
-OdoWatch is an app that allows you to track your odometer and then query for necessary repairs at your current odometer reading.
+A React Native application that automatically tracks your car's odometer reading by monitoring Bluetooth connectivity and location. OdoWatch recognizes different vehicles by their Bluetooth signatures and supports shared access, allowing multiple drivers to contribute to accurate odometer tracking for the same vehicle.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Features
 
-## Get started
+- Multi-vehicle support with Bluetooth device recognition
+- Shared vehicle access and tracking
+- Automatic distance tracking when connected to car's Bluetooth
+- Estimated odometer reading maintenance
+- Real-time location tracking during drives
+- Drive session tracking by driver
+- Current latitude and longitude display
 
-1. Install dependencies
+## How It Works
+
+1. Register your car's Bluetooth device(s)
+2. Share access with other drivers
+3. Automatically recognizes the car when any authorized user connects to the car's Bluetooth
+4. Tracks distance for all driving sessions
+5. Maintains a single, synchronized odometer reading across all users
+6. Logs driving history with driver identification
+
+## Vehicle Sharing Features
+
+- Invite other drivers to track your vehicle
+- View driving history by driver
+- Manage driver access permissions
+- Real-time odometer synchronization across users
+- Individual drive session logs
+
+## Prerequisites
+
+- Node.js (v14 or newer)
+- npm or yarn
+- Expo CLI (`npm install -g expo-cli`)
+- iOS Simulator (for iOS development)
+- Android Studio & Android SDK (for Android development)
+- Bluetooth-enabled vehicle
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone [your-repo-url]/odowatch
+   cd odowatch
+   ```
+
+2. Install dependencies:
 
    ```bash
    npm install
+   # or
+   yarn install
    ```
 
-2. Start the app
+## Development
+
+### Running in Expo Go
+
+1. Start the development server:
 
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-This project is also using yarn....I currently think this is bad practice, but we will resolve it closer to deployment.
+2. Scan the QR code with:
+   - iOS: Camera app
+   - Android: Expo Go app
 
-In the output, you'll find options to open the app in a
+### Creating a Development Build
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+1. Install the development client:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   ```bash
+   npx expo install expo-dev-client
+   ```
 
-# TODO: before deployment
-- [ ] Setup background tracking
-- [ ] Add a splash screen
-- [ ] Add a loading screen
-- [ ] Add a home screen
-- [ ] Add an about screen
-- [ ] Add a settings screen
-- [ ] Add an odometer screen
-- [ ] Add a history screen
-- [ ] Add a profile screen
-- [ ] Add a login screen
-- [ ] Add a register screen
-- [ ] Add a forgot password screen
-- [ ] Add a reset password screen
-- [ ] Add a verify email screen
-- [ ] Verify all licenses for packages
-- [] Setup firebase
-- [] Link user accounts
-- [] querry for necessary repairs at your current odometer reading
+2. Create platform-specific builds:
+
+   ```bash
+   # For iOS
+   npx expo prebuild -p ios
+   npx expo run:ios
+
+   # For Android
+   npx expo prebuild -p android
+   npx expo run:android
+   ```
+
+## Production Deployment
+
+### iOS
+
+1. Configure app.json:
+
+   ```json
+   {
+     "expo": {
+       "name": "OdoWatch",
+       "ios": {
+         "bundleIdentifier": "com.yourcompany.odowatch",
+         "infoPlist": {
+           "NSBluetoothAlwaysUsageDescription": "OdoWatch uses Bluetooth to identify and track your vehicles.",
+           "NSLocationWhenInUseUsageDescription": "OdoWatch needs location access to track distance traveled while driving.",
+           "UIBackgroundModes": ["location", "bluetooth-central"]
+         }
+       }
+     }
+   }
+   ```
+
+### Android
+
+1. Configure app.json:
+
+   ```json
+   {
+     "expo": {
+       "name": "OdoWatch",
+       "android": {
+         "package": "com.yourcompany.odowatch",
+         "permissions": [
+           "BLUETOOTH",
+           "BLUETOOTH_ADMIN",
+           "ACCESS_FINE_LOCATION",
+           "ACCESS_COARSE_LOCATION"
+         ]
+       }
+     }
+   }
+   ```
+
+2. Build for either platform:
+
+   ```bash
+   eas build --platform ios
+   # or
+   eas build --platform android
+   ```
+
+## Required Permissions
+
+The app requires the following permissions:
+- Bluetooth
+- Location Services
+- Background App Refresh
+- Background Location Updates
+
+## Setup Instructions
+
+1. Install the app
+2. Create an account
+3. Add a vehicle:
+   - Enter vehicle details
+   - Connect to vehicle's Bluetooth
+   - Enter current odometer reading
+4. (Optional) Share vehicle:
+   - Invite other drivers
+   - Manage access permissions
+5. Start driving - OdoWatch will automatically track mileage
+
+## Vehicle Management
+
+- Add multiple vehicles
+- Share vehicles with other users
+- View per-vehicle statistics
+- Track maintenance schedules
+- View driving history by vehicle and driver
+
+## Troubleshooting
+
+If tracking isn't working, check:
+1. Bluetooth is enabled and connected to your car
+2. Location permissions are granted
+3. Device location services are enabled
+4. Background app refresh is enabled
+5. App has proper permissions in device settings
+6. Vehicle sharing permissions are properly configured
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details
