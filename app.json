@@ -13,13 +13,19 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.twentyfivetech.odowatch",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to increase the estimated odometer reading.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location to increase the estimated odometer reading. Always-on location access is required for the app to function properly."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.twentyfivetech.odowatch"
     },
     "web": {
       "bundler": "metro",

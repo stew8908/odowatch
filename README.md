@@ -1,4 +1,6 @@
-# Welcome to your Expo app 👋
+# OdoWatch
+
+OdoWatch is an app that allows you to track your odometer and then query for necessary repairs at your current odometer reading.
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -16,6 +18,8 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
     npx expo start
    ```
 
+This project is also using yarn....I currently think this is bad practice, but we will resolve it closer to deployment.
+
 In the output, you'll find options to open the app in a
 
 - [development build](https://docs.expo.dev/develop/development-builds/introduction/)
@@ -25,26 +29,22 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# TODO: before deployment
+- [ ] Setup background tracking
+- [ ] Add a splash screen
+- [ ] Add a loading screen
+- [ ] Add a home screen
+- [ ] Add an about screen
+- [ ] Add a settings screen
+- [ ] Add an odometer screen
+- [ ] Add a history screen
+- [ ] Add a profile screen
+- [ ] Add a login screen
+- [ ] Add a register screen
+- [ ] Add a forgot password screen
+- [ ] Add a reset password screen
+- [ ] Add a verify email screen
+- [ ] Verify all licenses for packages
+- [] Setup firebase
+- [] Link user accounts
+- [] querry for necessary repairs at your current odometer reading
