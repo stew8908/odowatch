@@ -2,6 +2,7 @@ import { Text, View, Alert } from "react-native";
 import { useEffect, useState } from "react";
 import * as Location from 'expo-location';
 import Constants from 'expo-constants';
+import VehicleList from '../components/VehicleList';
 
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
   const R = 6371e3;
@@ -18,7 +19,8 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c;
 };
 
-export default function Index() {
+
+const HomeScreen = () => {
   const [distance, setDistance] = useState(0);
   const [lastLocation, setLastLocation] = useState<Location.LocationObject | null>(null);
   const isExpoGo = Constants.appOwnership === 'expo';
@@ -71,8 +73,9 @@ export default function Index() {
   }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Distance Traveled:</Text>
+    <View style={{ flex: 5, justifyContent: "center", alignItems: "center" , width: '100%'}}>
+      <VehicleList />
+      {/* <Text>Distance Travled:</Text>
       <Text>{(distance / 1000).toFixed(2)} km</Text>
       
       {lastLocation && (
@@ -80,6 +83,7 @@ export default function Index() {
           <Text style={{ marginTop: 20 }}>Current Position:</Text>
           <Text>Lat: {lastLocation.coords.latitude.toFixed(6)}</Text>
           <Text>Long: {lastLocation.coords.longitude.toFixed(6)}</Text>
+          <Text>Hello3</Text>
         </>
       )}
 
@@ -87,7 +91,8 @@ export default function Index() {
         <Text style={{ color: 'gray', marginTop: 10 }}>
           Running in Expo Go (foreground only)
         </Text>
-      )}
+      )} */}
     </View>
   );
 }
+export default HomeScreen;
