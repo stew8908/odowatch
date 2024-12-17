@@ -1,98 +1,172 @@
-import { Text, View, Alert } from "react-native";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from 'react';
+import { View, ActivityIndicator, Alert, Text } from 'react-native';
 import * as Location from 'expo-location';
-import Constants from 'expo-constants';
+import { db } from '../firebaseConfig'; // Import your Firebase config
+import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import VehicleList from '../components/VehicleList';
+import { Vehicle } from '../types/Vehicle'; // Import the Vehicle interface
+import { LocationSubscription } from 'expo-location'; // Import LocationSubscription
 
-const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-  const R = 6371e3;
-  const φ1 = (lat1 * Math.PI) / 180;
-  const φ2 = (lat2 * Math.PI) / 180;
-  const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-  const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-    Math.cos(φ1) * Math.cos(φ2) *
-    Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-  return R * c;
-};
-
-
-const HomeScreen = () => {
-  const [distance, setDistance] = useState(0);
+const Home = () => {
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [trackingVehicleId, setTrackingVehicleId] = useState<string | null>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [lastLocation, setLastLocation] = useState<Location.LocationObject | null>(null);
-  const isExpoGo = Constants.appOwnership === 'expo';
+  const [watchingLocation, setWatchingLocation] = useState(false);
+  const watchId = useRef<LocationSubscription | null>(null); // Update type here
 
   useEffect(() => {
-    const setupLocation = async () => {
+    const fetchVehicles = async () => {
       try {
-        console.info('[Location] Requesting permissions');
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        
-        if (status !== 'granted') {
-          console.error('[Location] Permission denied');
-          Alert.alert("Permission to access location was denied");
-          return;
-        }
+        const vehicleCollection = collection(db, 'vehicles');
+        const vehicleSnapshot = await getDocs(vehicleCollection);
+        const vehicleList = vehicleSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Vehicle[];
 
-        console.info('[Location] Starting location tracking');
-        const subscription = await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.BestForNavigation,
-            timeInterval: 5000,
-            distanceInterval: 5,
-          },
-          (location) => {
-            console.info('[Location] New location received:', location);
-            if (lastLocation) {
-              const newDistance = calculateDistance(
-                lastLocation.coords.latitude,
-                lastLocation.coords.longitude,
-                location.coords.latitude,
-                location.coords.longitude
-              );
-              console.info('[Location] Distance update:', { added: newDistance });
-              setDistance(d => d + newDistance);
-            }
-            setLastLocation(location);
-          }
-        );
-
-        return () => {
-          console.info('[Location] Cleaning up subscription');
-          subscription.remove();
-        };
+        setVehicles(vehicleList);
       } catch (error) {
-        console.error('[Location] Setup error:', error);
+        console.error('Error fetching vehicles: ', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    setupLocation();
+    fetchVehicles();
   }, []);
 
-  return (
-    <View style={{ flex: 5, justifyContent: "center", alignItems: "center" , width: '100%'}}>
-      <VehicleList />
-      {/* <Text>Distance Travled:</Text>
-      <Text>{(distance / 1000).toFixed(2)} km</Text>
-      
-      {lastLocation && (
-        <>
-          <Text style={{ marginTop: 20 }}>Current Position:</Text>
-          <Text>Lat: {lastLocation.coords.latitude.toFixed(6)}</Text>
-          <Text>Long: {lastLocation.coords.longitude.toFixed(6)}</Text>
-          <Text>Hello3</Text>
-        </>
-      )}
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission to access location was denied');
+        return;
+      }
 
-      {isExpoGo && (
-        <Text style={{ color: 'gray', marginTop: 10 }}>
-          Running in Expo Go (foreground only)
-        </Text>
-      )} */}
+      const currentLocation = await Location.getCurrentPositionAsync({});
+      setLocation(currentLocation);
+      setLastLocation(currentLocation);
+      console.log('currentLocation new location:', currentLocation);
+      console.log('Location is ready to go!');
+    };
+
+    requestLocationPermission();
+  }, []);
+
+  useEffect(() => {
+    if (trackingVehicleId && !watchingLocation) {
+      startWatchingLocation();
+    } else if (!trackingVehicleId && watchingLocation) {
+      stopWatchingLocation();
+    }
+  }, [trackingVehicleId]);
+
+  const startWatchingLocation = async () => {
+    setWatchingLocation(true);
+    watchId.current = await Location.watchPositionAsync(
+      {
+        accuracy: Location.Accuracy.High,
+        distanceInterval: 0.1, // Trigger on every location change
+        timeInterval: 1000, // Update every second
+      },
+      (newLocation) => {
+        console.log('Received new location:', newLocation);
+
+        if (lastLocation) {
+          const distance = calculateDistance(
+            lastLocation.coords.latitude,
+            lastLocation.coords.longitude,
+            newLocation.coords.latitude,
+            newLocation.coords.longitude
+          );
+
+          console.log('Distance traveled since last location:', distance);
+
+          if (distance > 0) {
+            // Update estimated miles for the tracked vehicle
+            const updatedVehicles = vehicles.map(vehicle => {
+              if (vehicle.id === trackingVehicleId) {
+                const newEstimatedMiles = Math.round((vehicle.estimatedMiles + distance) * 4) / 4; // Round to nearest 0.25 miles
+                console.log(`Updating estimated miles for vehicle ${vehicle.id}: ${newEstimatedMiles}`);
+                return { ...vehicle, estimatedMiles: newEstimatedMiles };
+              }
+              return vehicle;
+            });
+            setVehicles(updatedVehicles);
+          }
+        }
+        console.log('Last new location:', lastLocation);
+        setLastLocation(newLocation);
+        
+      }
+    );
+  };
+
+  const stopWatchingLocation = () => {
+    if (watchId.current) {
+      watchId.current.remove();
+      watchId.current = null;
+    }
+    setWatchingLocation(false);
+    console.log('Stopping tracking');
+  };
+
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const toRad = (value: number) => (value * Math.PI) / 180;
+    const R = 6371; // Radius of the Earth in km
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c * 0.621371; // Distance in miles
+  };
+
+  const handleVehicleSelect = async (vehicle: Vehicle) => {
+    if (trackingVehicleId === vehicle.id) {
+      // Stop tracking
+      setTrackingVehicleId(null);
+      // Update Firebase with new estimated miles
+      const vehicleRef = doc(db, 'vehicles', vehicle.id);
+      await updateDoc(vehicleRef, { estimatedMiles: vehicle.estimatedMiles });
+    } else {
+      // Start tracking
+      setTrackingVehicleId(vehicle.id);
+      // Increment estimated miles locally
+      vehicle.estimatedMiles += 1; // Increment by 1 for demonstration; adjust as needed
+    }
+  };
+
+  const calculateServiceDue = (vehicle: Vehicle): boolean => {
+    const totalMiles = vehicle.initialOdometer + vehicle.estimatedMiles;
+    return totalMiles >= vehicle.nextOilChange;
+  };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <VehicleList 
+        vehicles={vehicles.map(vehicle => ({
+          ...vehicle,
+          serviceDue: calculateServiceDue(vehicle), // Calculate serviceDue dynamically
+        }))} 
+        trackingVehicleId={trackingVehicleId} 
+        onVehicleSelect={handleVehicleSelect} 
+      />
+      {location && (
+        <View>
+          <Text>Current Location: {location.coords.latitude}, {location.coords.longitude}</Text>
+        </View>
+      )}
     </View>
   );
-}
-export default HomeScreen;
+};
+
+export default Home;
