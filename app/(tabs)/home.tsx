@@ -68,8 +68,8 @@ const Home = () => {
     watchId.current = await Location.watchPositionAsync(
       {
         accuracy: Location.Accuracy.High,
-        distanceInterval: 0.1, // Trigger on every location change
-        timeInterval: 1000, // Update every second
+        distanceInterval: 0.1, 
+        timeInterval: 1000,
       },
       (newLocation) => {
         console.log('Received new location:', newLocation);
