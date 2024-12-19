@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { db } from '../firebaseConfig'; // Import your Firebase config
 import { collection, addDoc } from 'firebase/firestore';
+import { Vehicle } from '../types/Vehicle'; // Import the Vehicle interface
 
 const AddVehicle = () => {
   const [vehicleName, setVehicleName] = useState('');
@@ -15,16 +16,21 @@ const AddVehicle = () => {
       return;
     }
 
+    // Create a new vehicle object using the Vehicle interface
+    const newVehicle: Vehicle = {
+      id: '', // You may want to generate or assign an ID here
+      vehicleName,
+      initialOdometer: parseInt(initialOdometer),
+      estimatedMiles: 0,
+      nextOilChange: parseInt(lastOilChange),
+      invitedUsers: [], // Initialize as an empty array or as needed
+      image: '', // Initialize as an empty string or as needed
+    };
+
     try {
       // Add vehicle to Firestore
-      await addDoc(collection(db, 'vehicles'), {
-        vehicleName,
-        initialOdometer: parseInt(initialOdometer),
-        nextOilChange: parseInt(lastOilChange),
-        estimatedMiles: 0,
-      });
+      await addDoc(collection(db, 'vehicles'), newVehicle);
       
-
       // Clear the fields after adding
       setVehicleName('');
       setInitialOdometer('');

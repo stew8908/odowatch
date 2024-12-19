@@ -1,6 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+
+//https://firebase.google.com/docs/auth/web/start
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -8,17 +12,28 @@ import { getFirestore } from "firebase/firestore";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDfGQJJooOg8yzjWxs48sbWxlP4y06L9HI",
-  authDomain: "odowatch.firebaseapp.com",
-  projectId: "odowatch",
-  storageBucket: "odowatch.firebasestorage.app",
-  messagingSenderId: "303235252413",
-  appId: "1:303235252413:web:799958dd1e79fd7a7cf7d4",
-  measurementId: "G-Z33FY2TKR2"
+    apiKey: "AIzaSyDfGQJJooOg8yzjWxs48sbWxlP4y06L9HI",
+    authDomain: "odowatch.firebaseapp.com",
+    projectId: "odowatch",
+    storageBucket: "odowatch.firebasestorage.app",
+    messagingSenderId: "303235252413",
+    appId: "1:303235252413:web:799958dd1e79fd7a7cf7d4",
+    measurementId: "G-Z33FY2TKR2"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export { db };
+// Initialize Firebase Authentication and get a reference to the service
+const auth = getAuth(app);
+const functions = getFunctions(app);
+
+// Connect to the Firestore emulator if running locally
+if (true) {
+    connectFirestoreEmulator(db, "localhost", 8080); // Use the port you set for Firestore
+    connectFunctionsEmulator(functions, "localhost", 5001); // Use the port you set for Functions
+    connectAuthEmulator(auth, "http://localhost:9099"); // Connect to the Auth emulator
+}
+
+export { db, auth, functions};

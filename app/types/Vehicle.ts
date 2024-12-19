@@ -4,5 +4,6 @@ export interface Vehicle {
   initialOdometer: number;
   estimatedMiles: number;
   nextOilChange: number;
+  invitedUsers: string[];
   image: string;
 } 

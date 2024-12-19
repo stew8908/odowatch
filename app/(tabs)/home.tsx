@@ -6,6 +6,8 @@ import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import VehicleList from '../components/VehicleList';
 import { Vehicle } from '../types/Vehicle'; // Import the Vehicle interface
 import { LocationSubscription } from 'expo-location'; // Import LocationSubscription
+import VehicleDisplay from '../components/VehicleDisplay'; // Import the new component
+
 
 const Home = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -15,6 +17,7 @@ const Home = () => {
   const [lastLocation, setLastLocation] = useState<Location.LocationObject | null>(null);
   const [watchingLocation, setWatchingLocation] = useState(false);
   const watchId = useRef<LocationSubscription | null>(null); // Update type here
+  const [displayVehicleId, setDisplayVehicleId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -35,7 +38,7 @@ const Home = () => {
     };
 
     fetchVehicles();
-  }, []);
+  }, [displayVehicleId]);
 
   useEffect(() => {
     const requestLocationPermission = async () => {
@@ -126,20 +129,30 @@ const Home = () => {
     return R * c * 0.621371; // Distance in miles
   };
 
+//   const handletrcking = async = async (vehicle: Vehicle) => {
+// {
+//   if (trackingVehicleId === vehicle.id) {
+//     // Stop tracking
+//     setTrackingVehicleId(null);
+//     // Update Firebase with new estimated miles
+//     const vehicleRef = doc(db, 'vehicles', vehicle.id);
+//     await updateDoc(vehicleRef, { estimatedMiles: vehicle.estimatedMiles });
+//   } else {
+//     // Start tracking
+//     setTrackingVehicleId(vehicle.id);
+//     // Increment estimated miles locally
+//     vehicle.estimatedMiles += 1; // Increment by 1 for demonstration; adjust as needed
+//   }
+// }
+
   const handleVehicleSelect = async (vehicle: Vehicle) => {
-    if (trackingVehicleId === vehicle.id) {
-      // Stop tracking
-      setTrackingVehicleId(null);
-      // Update Firebase with new estimated miles
-      const vehicleRef = doc(db, 'vehicles', vehicle.id);
-      await updateDoc(vehicleRef, { estimatedMiles: vehicle.estimatedMiles });
-    } else {
-      // Start tracking
-      setTrackingVehicleId(vehicle.id);
-      // Increment estimated miles locally
-      vehicle.estimatedMiles += 1; // Increment by 1 for demonstration; adjust as needed
-    }
+      setDisplayVehicleId(vehicle.id);
   };
+
+  const onVehicleDeselect = async () => {
+    setDisplayVehicleId(null);
+};
+
 
   const calculateServiceDue = (vehicle: Vehicle): boolean => {
     const totalMiles = vehicle.initialOdometer + vehicle.estimatedMiles;
@@ -152,14 +165,24 @@ const Home = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <VehicleList 
-        vehicles={vehicles.map(vehicle => ({
-          ...vehicle,
-          serviceDue: calculateServiceDue(vehicle), // Calculate serviceDue dynamically
-        }))} 
-        trackingVehicleId={trackingVehicleId} 
-        onVehicleSelect={handleVehicleSelect} 
-      />
+      {displayVehicleId ? (
+         <VehicleDisplay 
+         vehicles={vehicles.map(vehicle => ({
+           ...vehicle
+         }))} 
+         displayVehicleId={displayVehicleId} 
+         onVehicleDeselect={onVehicleDeselect}
+       />
+      ) : (
+        <VehicleList 
+          vehicles={vehicles.map(vehicle => ({
+            ...vehicle,
+            serviceDue: calculateServiceDue(vehicle), // Calculate serviceDue dynamically
+          }))} 
+          trackingVehicleId={trackingVehicleId} 
+          onVehicleSelect={handleVehicleSelect} 
+        />
+      )}
       {location && (
         <View>
           <Text>Current Location: {location.coords.latitude}, {location.coords.longitude}</Text>

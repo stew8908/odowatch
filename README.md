@@ -168,6 +168,9 @@ The app requires the following permissions:
 - View per-vehicle statistics
 - Track maintenance schedules
 - View driving history by vehicle and driver
+- Allow users to remove vehicles from their shared vehicles list
+- Implement a feature to edit vehicle details (e.g., name, odometer)
+- Allow owners to remove users from a shared vehicle that they own
 
 ## Troubleshooting
 
@@ -190,3 +193,52 @@ If tracking isn't working, check:
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details
+
+# TODO List for Upcoming Releases
+
+## User Authentication Enhancements
+- [ ] Implement email verification for new users.
+- [ ] Add password reset functionality.
+
+## Invitation Management
+- [ ] Implement notifications for users when they receive an invitation.
+- [ ] Create a UI for users to view and manage their pending invites.
+
+## Vehicle Management
+- [ ] Allow users to remove vehicles from their shared vehicles list.
+- [ ] Implement a feature to edit vehicle details (e.g., name, odometer).
+- [ ] Allow owners to remove users from a shared vehicle that they own.
+
+## Error Handling and Logging
+- [ ] Improve error handling in Firebase functions to provide more user-friendly messages.
+- [ ] Set up logging for Firebase functions to monitor usage and errors.
+
+## Testing and Validation
+- [ ] Write unit tests for Firebase functions to ensure reliability.
+- [ ] Implement input validation for user data (e.g., email format, vehicle ID format).
+
+## User Experience Improvements
+- [ ] Enhance the UI/UX of the invitation process (e.g., loading indicators, success messages).
+- [ ] Add tooltips or help sections for users to understand how to use the app features.
+
+## Performance Optimization
+- [ ] Optimize Firestore queries to reduce read costs and improve performance.
+- [ ] Review and optimize the structure of Firestore documents for better scalability.
+
+## Documentation
+- [ ] Update API documentation for Firebase functions.
+- [ ] Create user documentation or guides for using the app features.
+
+## Future Features
+- [ ] Consider implementing a feature for users to see a history of their vehicle usage.
+- [ ] Explore the possibility of integrating third-party services (e.g., for vehicle maintenance reminders).
+
+## Deployment and CI/CD
+- [ ] Set up continuous integration and deployment (CI/CD) for Firebase functions.
+- [ ] Automate testing and deployment processes to streamline updates.
+
+---
+
+**Notes**
+- Prioritize tasks based on user feedback and business needs.
+- Regularly review and update the TODO list as new requirements arise or tasks are completed.

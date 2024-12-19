@@ -15,7 +15,11 @@ const calculateServiceDue = (vehicle: Vehicle): boolean => {
 
 const VehicleList: React.FC<VehicleListProps> = ({ vehicles, trackingVehicleId, onVehicleSelect }) => {
   const renderVehicleItem = ({ item }: { item: Vehicle }) => (
-    <TouchableOpacity onPress={() => onVehicleSelect(item)} style={styles.tile}>
+    <TouchableOpacity 
+      onPress={() => onVehicleSelect(item)} 
+      onLongPress={() => {/* Navigate to edit page with item */}}
+      style={styles.tile}
+    >
       <Image source={{ uri: item.image }} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={styles.vehicleName}>{item.vehicleName}</Text>
