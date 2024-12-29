@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { db } from '../firebaseConfig'; // Import your Firebase config
+import { db, auth} from '../firebaseConfig'; // Import your Firebase config
 import { collection, addDoc } from 'firebase/firestore';
-import { Vehicle } from '../types/Vehicle'; // Import the Vehicle interface
+import { createNewVehicle, Vehicle } from '../types/Vehicle'; // Import the Vehicle interface
 
 const AddVehicle = () => {
   const [vehicleName, setVehicleName] = useState('');
@@ -17,16 +17,17 @@ const AddVehicle = () => {
     }
 
     // Create a new vehicle object using the Vehicle interface
-    const newVehicle: Vehicle = {
-      id: '', // You may want to generate or assign an ID here
-      vehicleName,
-      initialOdometer: parseInt(initialOdometer),
-      estimatedMiles: 0,
-      nextOilChange: parseInt(lastOilChange),
-      invitedUsers: [], // Initialize as an empty array or as needed
-      image: '', // Initialize as an empty string or as needed
-    };
-
+    // const newVehicle: Vehicle = {
+    //   id: '', // You may want to generate or assign an ID here
+    //   vehicleName,
+    //   initialOdometer: parseInt(initialOdometer),
+    //   estimatedMiles: 0,
+    //   nextOilChange: parseInt(lastOilChange),
+    //   invitedUsers: [], // Initialize as an empty array or as needed
+    //   image: '', // Initialize as an empty string or as needed
+    // };
+    const newVehicle = createNewVehicle(vehicleName, parseInt(initialOdometer),parseInt(lastOilChange), auth.currentUser?.uid)
+    console.info(newVehicle)
     try {
       // Add vehicle to Firestore
       await addDoc(collection(db, 'vehicles'), newVehicle);
