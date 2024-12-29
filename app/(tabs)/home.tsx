@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, ActivityIndicator, Alert, Text } from 'react-native';
 import * as Location from 'expo-location';
-import { db } from '../firebaseConfig'; // Import your Firebase config
+import { db, auth } from '../firebaseConfig'; // Import your Firebase config
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import VehicleList from '../components/VehicleList';
 import { Vehicle } from '../types/Vehicle'; // Import the Vehicle interface
@@ -24,12 +24,17 @@ const Home = () => {
       try {
         const vehicleCollection = collection(db, 'vehicles');
         const vehicleSnapshot = await getDocs(vehicleCollection);
-        const vehicleList = vehicleSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Vehicle[];
+        const vehicleList = vehicleSnapshot.docs
+          .map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+          })) as Vehicle[];
 
-        setVehicles(vehicleList);
+        // Filter the vehicle list to include only vehicles owned by the current user
+        const currentUserId = auth.currentUser?.uid; // Get the current user's ID
+        const ownedVehicleList = vehicleList.filter(vehicle => vehicle.ownerId === currentUserId);
+
+        setVehicles(ownedVehicleList);
       } catch (error) {
         console.error('Error fetching vehicles: ', error);
       } finally {
