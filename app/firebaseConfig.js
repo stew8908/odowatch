@@ -1,8 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { initializeAuth, connectAuthEmulator, getReactNativePersistence} from "firebase/auth";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 //https://firebase.google.com/docs/auth/web/start
 
@@ -26,7 +27,9 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Initialize Firebase Authentication and get a reference to the service
-const auth = getAuth(app);
+const auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+  });
 const functions = getFunctions(app);
 
 // Connect to the Firestore emulator if running locally
