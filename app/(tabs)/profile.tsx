@@ -6,7 +6,7 @@ const Profile = () => {
   
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Welcome {auth.currentUser?.displayName}</Text>
+      <Text>Welcome! {auth.currentUser?.displayName}</Text>
       <Text
         onPress={async() => {
           console.info('Signing out')

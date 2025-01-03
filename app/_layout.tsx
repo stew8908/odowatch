@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
-    console.info("reached root")
+    console.info("reached rootr")
   return (
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

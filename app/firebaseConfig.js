@@ -33,7 +33,7 @@ const auth = initializeAuth(app, {
 const functions = getFunctions(app);
 
 // Connect to the Firestore emulator if running locally
-if (true) {
+if (false) {
     connectFirestoreEmulator(db, "localhost", 8080); // Use the port you set for Firestore
     connectFunctionsEmulator(functions, "localhost", 5001); // Use the port you set for Functions
     connectAuthEmulator(auth, "http://localhost:9099"); // Connect to the Auth emulator

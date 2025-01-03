@@ -3,7 +3,7 @@ import { Tabs, router} from "expo-router";
 import { BlurView } from "expo-blur";
 import { BottomTabBar } from "@react-navigation/bottom-tabs";
 import React from "react";
-import { Platform, View, Text, ActivityIndicator} from "react-native";
+import { Platform, View, Text, ActivityIndicator, Button} from "react-native";
 import { useState } from 'react';
 import { auth } from "../firebaseConfig";
 
@@ -42,10 +42,11 @@ export default function TabsLayout() {
     }
   >
     <Tabs.Screen
-      name="index"
+      name="(home)"
       options={{
         href: "/",
         title: "",
+        headerShown: false,
         tabBarIcon: ({ color }) => (
           <View
             style={{
@@ -58,28 +59,6 @@ export default function TabsLayout() {
             <TabBarIcon name="car" color={color} size={24} />
             <Text style={{ marginTop: 5, fontSize: 10, opacity: 0.5 }}>
               Home
-            </Text>
-          </View>
-        ),
-      }}
-    />
-        <Tabs.Screen
-      name="addvehicle"
-      options={{
-        href: "/addvehicle",
-        title: "",
-        tabBarIcon: ({ color }) => (
-          <View
-            style={{
-              flexDirection: "column",
-              alignItems: "center",
-              marginTop: 17,
-              backgroundColor: "transparent",
-            }}
-          >
-            <TabBarIcon name="plus" color={color} size={24} />
-            <Text style={{ marginTop: 5, fontSize: 10, opacity: 0.5 }}>
-            Add Vehicle
             </Text>
           </View>
         ),

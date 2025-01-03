@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { db, auth} from '../firebaseConfig'; // Import your Firebase config
+import { db, auth} from '../../firebaseConfig'; // Import your Firebase config
 import { collection, addDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { createNewVehicle, Vehicle } from '../types/Vehicle'; // Import the Vehicle interface
+import { createNewVehicle, Vehicle } from '../../types/Vehicle'; // Import the Vehicle interface
 
 const AddVehicle = () => {
   const [vehicleName, setVehicleName] = useState('');

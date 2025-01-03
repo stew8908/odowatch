@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, ActivityIndicator, Alert, Text } from 'react-native';
+import { View, ActivityIndicator, Alert, Text, Button, FlatList, PermissionsAndroid, Platform, StyleSheet } from 'react-native';
 import * as Location from 'expo-location';
-import { db, auth } from '../firebaseConfig'; // Import your Firebase config
+import { db, auth } from '../../firebaseConfig'; // Import your Firebase config
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
-import VehicleList from '../components/VehicleList';
-import { Vehicle } from '../types/Vehicle'; // Import the Vehicle interface
+import VehicleList from '../../components/VehicleList';
+import { Vehicle } from '../../types/Vehicle'; // Import the Vehicle interface
 import { LocationSubscription } from 'expo-location'; // Import LocationSubscription
-import VehicleDisplay from '../components/VehicleDisplay'; // Import the new component
+import VehicleDisplay from '../../components/VehicleDisplay'; // Import the new component
+import { useRouter } from 'expo-router'; // Import useRouter for navigation
 
 
 const Home = () => {
@@ -18,6 +19,7 @@ const Home = () => {
   const [watchingLocation, setWatchingLocation] = useState(false);
   const watchId = useRef<LocationSubscription | null>(null); // Update type here
   const [displayVehicleId, setDisplayVehicleId] = useState<string | null>(null);
+  const router = useRouter(); // Initialize the router
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -194,7 +196,22 @@ const Home = () => {
         </View>
       )}
     </View>
+    
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start', // Align items to the start
+    padding: 20, // Add some padding
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20, // Add margin below the title
+  },
+});
 
 export default Home;
