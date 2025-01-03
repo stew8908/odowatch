@@ -1,15 +1,23 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { useSession } from '../../ctx';
+import { auth } from '../firebaseConfig';
 
 const Profile = () => {
-  const { signOut } = useSession();
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text
-        onPress={() => {
+        onPress={async() => {
+          console.info('Signing out')
           // The `app/(app)/_layout.tsx` will redirect to the sign-in screen.
-          signOut();
+            try
+            { 
+              await auth.signOut();
+              console.info('Signed out')
+            } 
+            catch(error)
+            {
+              console.error(error)
+            }
         }}>
         Sign Out
       </Text>

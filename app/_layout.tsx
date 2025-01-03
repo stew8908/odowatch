@@ -1,10 +1,13 @@
-import { Slot } from "expo-router";
-import { SessionProvider } from '../ctx';
+import { Stack } from "expo-router";
 
 export default function RootLayout() {
+    console.info("reached root")
   return (
-    <SessionProvider>
-      <Slot />
-    </SessionProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="landing" options={{ headerShown: false }} />
+        <Stack.Screen name="login" />
+        {/* <Stack.Screen name="register" options={{ presentation: "modal" }} /> */}
+      </Stack>
   );
 }
