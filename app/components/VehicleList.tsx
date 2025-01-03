@@ -20,7 +20,7 @@ const VehicleList: React.FC<VehicleListProps> = ({ vehicles, trackingVehicleId, 
       onLongPress={() => {/* Navigate to edit page with item */}}
       style={styles.tile}
     >
-      <Image source={{ uri: item.image }} style={styles.image} />
+      <Image source={require('../../assets/images/vecteezy_car-icon-car-icon-on-a-white-background-illustration_50564403.jpg')} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={styles.vehicleName}>{item.vehicleName}</Text>
         <Text>Initial Odometer: {item.initialOdometer} miles</Text>
