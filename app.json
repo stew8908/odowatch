@@ -17,7 +17,9 @@
       "bundleIdentifier": "com.twentyfivetech.odowatch",
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "This app uses your location to increase the estimated odometer reading.",
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location to increase the estimated odometer reading. Always-on location access is required for the app to function properly."
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location to increase the estimated odometer reading. Always-on location access is required for the app to function properly.",
+        "NSBluetoothAlwaysUsageDescription": "This app requires access to Bluetooth to determine proximity to vehicles.",
+        "NSBluetoothPeripheralUsageDescription": "This app uses Bluetooth to detect nearby vehicles."
       }
     },
     "android": {
