@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { db, auth} from '../../firebaseConfig'; // Import your Firebase config
 import { collection, addDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { createNewVehicle, Vehicle } from '../../types/Vehicle'; // Import the Vehicle interface
-
+import { router } from 'expo-router';
 const AddVehicle = () => {
   const [vehicleName, setVehicleName] = useState('');
   const [initialOdometer, setInitialOdometer] = useState('');
@@ -77,7 +77,7 @@ const AddVehicle = () => {
           onChangeText={setLastOilChange}
           keyboardType="numeric"
         />
-        
+        <Button title="Find Vehicle" onPress={() => router.push('/(home)/findvehicle')} />
         <Button title="Add Vehicle" onPress={handleAddVehicle} />
       </View>
     </View>

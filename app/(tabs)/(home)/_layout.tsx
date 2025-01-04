@@ -16,7 +16,7 @@ export default function RootLayout() {
             )
             }} />
         <Stack.Screen name="addvehicle" options={{title: "Add Vehicle"}} />
-        {/* <Stack.Screen name="register" options={{ presentation: "modal" }} /> */}
+       <Stack.Screen name="findvehicle" options={{ title: "Find Vehicle" }} />
       </Stack>
   );
 }
